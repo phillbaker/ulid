@@ -13,14 +13,14 @@ LENCODING = len(ENCODING)
 
 PY3 = sys.version_info[0] == 3
     
-def encode_time_10bytes(x):
+def encode_time_6bytes(x):
     s = ''
     while len(s) < 10:
         x, i = divmod(x, LENCODING)
         s = ENCODING[i] + s
     return s
 
-def encode_random_16bytes():
+def encode_random_10bytes():
     b = os.urandom(10)
     x = int(codecs.encode(b, 'hex') if PY3 else b.encode('hex'), 16)
     s = ''
@@ -45,7 +45,7 @@ def sharding(ulid, partitions):
     return convert(ulid[-16:]) % partitions
 
 def ulid():
-    return encode_time_10bytes(int(time.time()*1000)) + encode_random_16bytes()
+    return encode_time_6bytes(int(time.time()*1000)) + encode_random_10bytes()
 
 def main():
     for _ in range(10):
